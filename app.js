@@ -14,23 +14,34 @@ const app = express();
 
 app.use(morgan('dev'));
 app.use(helmet());
-app.use(cors());
+app.use(cors({
+  origin: true
+}));
 app.use(express.json());
 
-const options = {
-  headers: {
-    Referer: 'www.adkami.com',
-    authority: 'www.adkami.com',
-    'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.102 Safari/537.36'
-  }
-};
+app.get('/', (req, res) => {
+  res.json({
+    message: '🦄🌈✨👋🌎🌍🌏✨🌈🦄'
+  });
+});
 
 app.post('/getAnime', async (req, res) => {
   const {
     url
   } = req.body;
+  const options = {
+    headers: {
+      Referer: 'www.adkami.com',
+      authority: 'www.adkami.com',
+      'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.102 Safari/537.36'
+    }
+  };
   const result = await fetch(url, options);
   const html = await result.text();
+  console.log({
+    url,
+    html
+  });
   const $ = cheerio.load(html);
 
   // ! TITLE
